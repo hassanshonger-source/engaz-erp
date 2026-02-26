@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENGAZ ERP - Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- Auth App: Login Form -->
+    <div id="auth-app" class="flex-center full-height">
+        <div class="card auth-card">
+            <h2 class="text-center">ENGAZ Admin</h2>
+            <div id="auth-error" class="alert error hidden"></div>
+
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary full-width" id="btn-login">Login via Secure Portal</button>
+            </form>
+
+            <form id="force-password-form" class="hidden">
+                <div class="alert warning">Security mandate: Please set a new secure password.</div>
+                <div class="form-group">
+                    <label>New Password (Min 8 chars)</label>
+                    <input type="password" id="new-password" required minlength="8">
+                </div>
+                <button type="submit" class="btn btn-warning full-width">Update Password & Proceed</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard App -->
+    <div id="main-app" class="hidden">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>ENGAZ Admin</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-link active" data-view="dashboard">Dashboard</a>
+                <a href="#tenants" class="nav-link" data-view="tenants">Tenants & Subscriptions</a>
+                <a href="#reports" class="nav-link" data-view="reports">Audit Logs</a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="btn-logout" class="btn btn-outline text-white full-width">Logout</button>
+            </div>
+        </aside>
+
+        <main class="content">
+            <header class="topbar">
+                <div id="current-view-title">Dashboard</div>
+            </header>
+
+            <div class="view-container" id="view-dashboard">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-title">Total Active Tenants</div>
+                        <div class="kpi-value" id="kpi-active-tenants">0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-title">Trialing Users</div>
+                        <div class="kpi-value" id="kpi-trialing">0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-title">Expired Subscriptions</div>
+                        <div class="kpi-value" id="kpi-expired">0</div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <canvas id="growthChart" height="100"></canvas>
+                </div>
+            </div>
+
+            <div class="view-container hidden" id="view-tenants">
+                <div class="flex-between mb-3">
+                    <h3>Tenant Management</h3>
+                    <input type="text" id="tenant-search" class="form-control" placeholder="Search by name..."
+                        style="width:300px">
+                </div>
+                <table class="table" id="tenants-table">
+                    <thead>
+                        <tr>
+                            <th>Tenant ID</th>
+                            <th>Business Name</th>
+                            <th>Status</th>
+                            <th>Sub Ends</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="view-container hidden" id="view-reports">
+                <h3>Audit Logs</h3>
+                <!-- System Audit Logs -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-manage-sub" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Manage Subscription: <span id="modal-tenant-name"></span></h3>
+            <div id="modal-sub-msg" class="alert hidden"></div>
+            <form id="form-manage-sub">
+                <input type="hidden" id="manage-tenant-id">
+                <div class="form-group">
+                    <label>Extend / Activate Duration</label>
+                    <select id="sub-duration" class="form-control" required>
+                        <option value="1 month">1 Month</option>
+                        <option value="3 months">3 Months</option>
+                        <option value="6 months">6 Months</option>
+                        <option value="1 year">1 Year</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Apply Subscription</button>
+            </form>
+            <hr class="mt-4 mb-4">
+            <h4>Reset Tenant User Password</h4>
+            <p class="text-sm">Generates a secure temporary password/token. Give this string to the user manually.</p>
+            <button id="btn-gen-temp-pass" class="btn btn-warning">Generate Temp Password</button>
+            <div id="temp-pass-display" class="alert success hidden mt-2"
+                style="font-family: monospace; font-size: 16px;"></div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+
+</html>

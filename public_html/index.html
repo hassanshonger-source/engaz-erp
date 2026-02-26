@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENGAZ - Accounting & ERP</title>
+    <!-- Use Google Fonts that support both English and Arabic -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <!-- Auth Application -->
+    <div id="auth-app" class="flex-center full-height auth-bg">
+        <div class="card auth-card">
+            <h2 class="text-center auth-title">ENGAZ ERP</h2>
+            <div id="auth-info-alert" class="alert info hidden text-center mb-3"></div>
+            <div id="auth-error" class="alert error hidden text-center mb-3"></div>
+
+            <!-- Login Form -->
+            <form id="form-login">
+                <div class="form-group">
+                    <label>Company/User Code (4 Digits)</label>
+                    <input type="text" id="login-code" placeholder="e.g. 1234" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary full-width" id="btn-login">Login</button>
+
+                <div class="mt-3 text-center text-sm">
+                    <a href="#" id="link-to-register">New Company? Create Account</a><br><br>
+                    <a href="#" id="link-forgot-pass" class="text-muted">Forgot Password?</a>
+                </div>
+            </form>
+
+            <!-- Register Form -->
+            <form id="form-register" class="hidden">
+                <div class="form-group">
+                    <label>Company Name</label>
+                    <input type="text" id="reg-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Business Activity (Optional)</label>
+                    <input type="text" id="reg-activity">
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp Number</label>
+                    <input type="text" id="reg-whatsapp" placeholder="+123456789" required>
+                </div>
+                <div class="form-group">
+                    <label>Admin Password</label>
+                    <input type="password" id="reg-password" required minlength="6">
+                </div>
+                <button type="submit" class="btn btn-success full-width" id="btn-register">Start 7-Day Free
+                    Trial</button>
+                <div class="mt-3 text-center text-sm">
+                    <a href="#" id="link-to-login">Already have an account? Login</a>
+                </div>
+            </form>
+
+            <!-- Force Password Change Form -->
+            <form id="form-force-password" class="hidden">
+                <div class="alert warning">You must change your temporary password before continuing.</div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="force-new-password" required minlength="6">
+                </div>
+                <button type="submit" class="btn btn-warning full-width" id="btn-force-pass">Update Password</button>
+            </form>
+
+            <!-- Blocked/Expired Subscription Form -->
+            <div id="view-blocked" class="hidden text-center">
+                <h2>Subscription Required</h2>
+                <p class="text-muted mb-4">Your subscription or trial has expired. To continue using ENGAZ ERP, please
+                    contact support to renew your plan.</p>
+                <a href="https://wa.me/support_number" target="_blank" class="btn btn-success">Contact Support on
+                    WhatsApp</a>
+                <div class="mt-4">
+                    <button class="btn btn-outline" id="btn-blocked-logout">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="main-app" class="hidden">
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <h2 id="brand-name">ENGAZ</h2>
+                <div class="tenant-badge" id="tenant-badge">Trial</div>
+            </div>
+            <nav class="nav-menu">
+                <a href="#dashboard" class="nav-link active" data-view="dashboard">
+                    <i class="icon">📊</i> <span>Dashboard</span>
+                </a>
+                <a href="#sales" class="nav-link" data-view="sales">
+                    <i class="icon">💼</i> <span>Sales</span>
+                </a>
+                <a href="#purchases" class="nav-link" data-view="purchases">
+                    <i class="icon">🛒</i> <span>Purchases</span>
+                </a>
+                <a href="#inventory" class="nav-link" data-view="inventory">
+                    <i class="icon">📦</i> <span>Inventory</span>
+                </a>
+                <a href="#customers" class="nav-link" data-view="customers">
+                    <i class="icon">👥</i> <span>Customers</span>
+                </a>
+                <a href="#suppliers" class="nav-link" data-view="suppliers">
+                    <i class="icon">🏭</i> <span>Suppliers</span>
+                </a>
+                <a href="#expenses" class="nav-link" data-view="expenses">
+                    <i class="icon">💸</i> <span>Expenses</span>
+                </a>
+                <a href="#reports" class="nav-link" data-view="reports">
+                    <i class="icon">📑</i> <span>Finance & Reports</span>
+                </a>
+                <a href="#settings" class="nav-link" data-view="settings">
+                    <i class="icon">⚙️</i> <span>Settings</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="btn-theme-toggle" class="btn btn-icon" title="Toggle Theme">🌓</button>
+                <button id="btn-lang-toggle" class="btn btn-icon" title="Toggle Language">🌐</button>
+                <button id="btn-app-logout" class="btn btn-icon text-danger" title="Logout">🚪</button>
+            </div>
+        </aside>
+
+        <!-- Top Header & Main Content -->
+        <main class="main-content">
+            <header class="top-header flex-between">
+                <div class="header-left">
+                    <h3 id="page-title">Dashboard</h3>
+                </div>
+                <div class="header-right flex-center">
+                    <div class="notifications" id="btn-notifications">
+                        🔔 <span class="badge red hidden" id="notif-count">0</span>
+                    </div>
+                    <div class="user-profile">
+                        <span id="header-user-name">User</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="views-wrapper">
+
+                <!-- VIEW: Dashboard -->
+                <div id="view-dashboard" class="view-panel">
+                    <div class="kpi-grid mb-4">
+                        <div class="kpi-box">
+                            <h5>Today's Sales</h5>
+                            <h2 id="kpi-sales-today">0.00</h2>
+                        </div>
+                        <div class="kpi-box">
+                            <h5>Monthly Sales</h5>
+                            <h2 id="kpi-sales-month">0.00</h2>
+                        </div>
+                        <div class="kpi-box">
+                            <h5>Expenses (Month)</h5>
+                            <h2 id="kpi-expenses">0.00</h2>
+                        </div>
+                        <div class="kpi-box">
+                            <h5>Products Low Stock</h5>
+                            <h2 id="kpi-low-stock" class="text-warning">0</h2>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid">
+                        <div class="chart-container card">
+                            <h4>Sales vs Purchases (30 Days)</h4>
+                            <canvas id="mainChart" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stub views for other modules (Will populate progressively) -->
+                <div id="view-sales" class="view-panel hidden">
+                    <h2>Sales Invoices</h2>
+                    <p>Loading...</p>
+                </div>
+                <div id="view-purchases" class="view-panel hidden">
+                    <h2>Purchase Invoices</h2>
+                    <p>Loading...</p>
+                </div>
+                <div id="view-inventory" class="view-panel hidden">
+                    <h2>Inventory Management</h2>
+                    <p>Loading...</p>
+                </div>
+                <div id="view-customers" class="view-panel hidden">
+                    <h2>Customers</h2>
+                    <p>Loading...</p>
+                </div>
+                <div id="view-suppliers" class="view-panel hidden">
+                    <h2>Suppliers</h2>
+                    <p>Loading...</p>
+                </div>
+                <div id="view-expenses" class="view-panel hidden">
+                    <h2>Expenses</h2>
+                    <p>Loading...</p>
+                </div>
+                <div id="view-reports" class="view-panel hidden">
+                    <h2>Financial Reports</h2>
+                    <p>Loading...</p>
+                </div>
+                <div id="view-settings" class="view-panel hidden">
+                    <h2>Settings</h2>
+                    <p>Loading...</p>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
